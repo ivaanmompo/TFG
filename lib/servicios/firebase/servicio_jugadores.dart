@@ -1,118 +1,117 @@
 /*
-  Archivo: servicio_equipos.dart
+  Archivo: servicio_jugadores.dart
   Descripción:
-    Servicio dedicado a la administración CRUD de la colección "equipos".
+    Servicio dedicado a la administración CRUD de la colección "jugadores".
     Incluye creación, edición, archivado, activación, eliminación y consulta
-    de equipos pertenecientes a una liga.
+    de jugadores pertenecientes a un equipo.
 
   Dependencias:
     - cloud_firestore
-    - modelos/equipo.dart
+    - modelos/jugador.dart
     - servicio_log.dart
     - textos_app.dart
 */
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:fantasypro/modelos/equipo.dart';
+import 'package:fantasypro/modelos/jugador.dart';
 import 'package:fantasypro/servicios/utilidades/servicio_log.dart';
 import 'package:fantasypro/textos/textos_app.dart';
 
-class ServicioEquipos {
+class ServicioJugadores {
   final FirebaseFirestore _db = FirebaseFirestore.instance;
   final ServicioLog _log = ServicioLog();
 
   // ---------------------------------------------------------------------------
   // Constantes internas: nombres de colección y campos
   // ---------------------------------------------------------------------------
+  static const String _coleccion = "jugadores";
 
-  static const String _coleccion = "equipos";
-
-  static const String _campoIdLiga = "idLiga";
+  static const String _campoIdEquipo = "idEquipo";
   static const String _campoActivo = "activo";
 
   // ---------------------------------------------------------------------------
-  // Crear equipo
+  // Crear jugador
   // ---------------------------------------------------------------------------
-  Future<Equipo> crearEquipo(Equipo equipo) async {
+  Future<Jugador> crearJugador(Jugador jugador) async {
     try {
-      final doc = await _db.collection(_coleccion).add(equipo.aMapa());
-      final nuevo = equipo.copiarCon(id: doc.id);
+      final doc = await _db.collection(_coleccion).add(jugador.aMapa());
+      final nuevo = jugador.copiarCon(id: doc.id);
 
-      _log.informacion("${TextosApp.LOG_EQUIPOS_CREAR} ${nuevo.id}");
+      _log.informacion("${TextosApp.LOG_JUGADORES_CREAR} ${nuevo.id}");
       return nuevo;
     } catch (e) {
-      _log.error("${TextosApp.LOG_EQUIPOS_ERROR} $e");
+      _log.error("${TextosApp.LOG_JUGADORES_ERROR} $e");
       rethrow;
     }
   }
 
   // ---------------------------------------------------------------------------
-  // Obtener todos los equipos de una liga
+  // Obtener todos los jugadores de un equipo
   // ---------------------------------------------------------------------------
-  Future<List<Equipo>> obtenerEquiposDeLiga(String idLiga) async {
+  Future<List<Jugador>> obtenerJugadoresDeEquipo(String idEquipo) async {
     try {
       final query = await _db
           .collection(_coleccion)
-          .where(_campoIdLiga, isEqualTo: idLiga)
+          .where(_campoIdEquipo, isEqualTo: idEquipo)
           .get();
 
-      _log.informacion("${TextosApp.LOG_EQUIPOS_LISTAR} $idLiga");
+      _log.informacion("${TextosApp.LOG_JUGADORES_LISTAR} $idEquipo");
 
-      return query.docs.map((d) => Equipo.desdeMapa(d.id, d.data())).toList();
+      return query.docs.map((d) => Jugador.desdeMapa(d.id, d.data())).toList();
     } catch (e) {
-      _log.error("${TextosApp.LOG_EQUIPOS_ERROR} $e");
+      _log.error("${TextosApp.LOG_JUGADORES_ERROR} $e");
       rethrow;
     }
   }
 
   // ---------------------------------------------------------------------------
-  // Editar equipo
+  // Editar jugador
   // ---------------------------------------------------------------------------
-  Future<void> editarEquipo(Equipo equipo) async {
+  Future<void> editarJugador(Jugador jugador) async {
     try {
-      await _db.collection(_coleccion).doc(equipo.id).update(equipo.aMapa());
-      _log.informacion("${TextosApp.LOG_EQUIPOS_EDITAR} ${equipo.id}");
+      await _db.collection(_coleccion).doc(jugador.id).update(jugador.aMapa());
+      _log.informacion("${TextosApp.LOG_JUGADORES_EDITAR} ${jugador.id}");
     } catch (e) {
-      _log.error("${TextosApp.LOG_EQUIPOS_ERROR} $e");
+      _log.error("${TextosApp.LOG_JUGADORES_ERROR} $e");
       rethrow;
     }
   }
 
   // ---------------------------------------------------------------------------
-  // Archivar equipo (activo = false)
+  // Archivar jugador (activo = false)
   // ---------------------------------------------------------------------------
-  Future<void> archivarEquipo(String id) async {
+  Future<void> archivarJugador(String id) async {
     try {
       await _db.collection(_coleccion).doc(id).update({_campoActivo: false});
-      _log.informacion("${TextosApp.LOG_EQUIPOS_ARCHIVAR} $id");
+      _log.informacion("${TextosApp.LOG_JUGADORES_ARCHIVAR} $id");
     } catch (e) {
-      _log.error("${TextosApp.LOG_EQUIPOS_ERROR} $e");
+      _log.error("${TextosApp.LOG_JUGADORES_ERROR} $e");
       rethrow;
     }
   }
 
   // ---------------------------------------------------------------------------
-  // Activar equipo (activo = true)
+  // Activar jugador (activo = true)
   // ---------------------------------------------------------------------------
-  Future<void> activarEquipo(String id) async {
+  Future<void> activarJugador(String id) async {
     try {
       await _db.collection(_coleccion).doc(id).update({_campoActivo: true});
-      _log.informacion("${TextosApp.LOG_EQUIPOS_ACTIVAR} $id");
+      _log.informacion("${TextosApp.LOG_JUGADORES_ACTIVAR} $id");
     } catch (e) {
-      _log.error("${TextosApp.LOG_EQUIPOS_ERROR} $e");
+      _log.error("${TextosApp.LOG_JUGADORES_ERROR} $e");
       rethrow;
     }
   }
 
   // ---------------------------------------------------------------------------
-  // Eliminar equipo
+  // Eliminar jugador
   // ---------------------------------------------------------------------------
-  Future<void> eliminarEquipo(String id) async {
+  Future<void> eliminarJugador(String id) async {
     try {
       await _db.collection(_coleccion).doc(id).delete();
-      _log.informacion("${TextosApp.LOG_EQUIPOS_ELIMINAR} $id");
+      _log.informacion("${TextosApp.LOG_JUGADORES_ELIMINAR} $id");
     } catch (e) {
-      _log.error("${TextosApp.LOG_EQUIPOS_ERROR} $e");
+      _log.error("${TextosApp.LOG_JUGADORES_ERROR} $e");
       rethrow;
     }
   }
