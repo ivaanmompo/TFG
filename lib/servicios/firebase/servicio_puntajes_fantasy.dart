@@ -1,0 +1,159 @@
+/*
+  Archivo: servicio_puntajes_fantasy.dart
+  Descripción:
+    Servicio encargado de la gestión de puntajes fantasy asignados a equipos
+    en fechas específicas dentro de una participación de liga.
+
+  Responsabilidades:
+    - Guardar el puntaje de un equipo fantasy en una fecha.
+    - Recuperar puntaje fantasy dado una participación y una fecha.
+    - Garantizar consistencia y seguridad de escritura en subcolección anidada.
+
+  Dependencias:
+    - FirebaseFirestore
+    - PuntajeEquipoFantasy
+    - ServicioLog
+*/
+
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:fantasypro/modelos/puntaje_equipo_fantasy.dart';
+import 'package:fantasypro/servicios/utilidades/servicio_log.dart';
+import 'package:fantasypro/textos/textos_app.dart';
+import 'servicio_base_de_datos.dart';
+
+class ServicioPuntajesFantasy {
+  /// Instancia de Firestore.
+  final FirebaseFirestore _db = FirebaseFirestore.instance;
+
+  /// Servicio de log para auditoría.
+  final ServicioLog _log = ServicioLog();
+
+  /// Sanitiza un ID antes de uso en Firestore.
+  String _sanitizarId(String v) {
+    return v
+        .trim()
+        .replaceAll('"', '')
+        .replaceAll("'", "")
+        .replaceAll("\\", "")
+        .replaceAll("\n", "")
+        .replaceAll("\r", "");
+  }
+
+  /*
+    Nombre: guardarPuntajeEquipoFantasy
+    Descripción:
+      Persiste el puntaje de un equipo fantasy como documento en la subcolección
+      de la participación correspondiente. Utiliza el idFecha como ID del documento.
+    Entradas:
+      - modelo (PuntajeEquipoFantasy): datos a guardar.
+    Salidas:
+      - Futuro void.
+  */
+  Future<void> guardarPuntajeEquipoFantasy(PuntajeEquipoFantasy modelo) async {
+    try {
+      final idParticipacion = _sanitizarId(modelo.idParticipacion);
+      final idFecha = _sanitizarId(modelo.idFecha);
+
+      if (idParticipacion.isEmpty || idFecha.isEmpty) {
+        throw ArgumentError(TextosApp.ERR_SERVICIO_ID_PARTICIPACION_O_FECHA_INVALIDO);
+      }
+
+      _log.informacion(
+        "${TextosApp.LOG_PUNTAJE_FANTASY_GUARDAR} participacion=$idParticipacion, fecha=$idFecha, puntos=${modelo.puntajeTotal}",
+      );
+
+      await _db
+          .collection(ColFirebase.participaciones)
+          .doc(idParticipacion)
+          .collection(ColFirebase.puntajesFantasy)
+          .doc(idFecha)
+          .set(modelo.aMapa());
+    } catch (e) {
+      _log.error("${TextosApp.LOG_PUNTAJE_FANTASY_ERROR_GUARDAR} $e");
+      rethrow;
+    }
+  }
+
+  /*
+    Nombre: obtenerPorParticipacionYFecha
+    Descripción:
+      Recupera el puntaje fantasy de un equipo, para una participación y fecha determinada.
+    Entradas:
+      - idParticipacion (String): ID de la participación.
+      - idFecha (String): ID de la fecha.
+    Salidas:
+      - Futuro que puede devolver PuntajeEquipoFantasy o null si no existe.
+  */
+  Future<PuntajeEquipoFantasy?> obtenerPorParticipacionYFecha(
+    String idParticipacion,
+    String idFecha,
+  ) async {
+    try {
+      idParticipacion = _sanitizarId(idParticipacion);
+      idFecha = _sanitizarId(idFecha);
+
+      if (idParticipacion.isEmpty || idFecha.isEmpty) {
+        throw ArgumentError(TextosApp.ERR_SERVICIO_ID_PARTICIPACION_O_FECHA_INVALIDO);
+      }
+
+      _log.informacion(
+        TextosApp.LOG_PUNTAJE_FANTASY_OBTENER
+            .replaceFirst('{PARTICIPACION}', idParticipacion)
+            .replaceFirst('{FECHA}', idFecha),
+      );
+
+      final doc = await _db
+          .collection(ColFirebase.participaciones)
+          .doc(idParticipacion)
+          .collection(ColFirebase.puntajesFantasy)
+          .doc(idFecha)
+          .get();
+
+      if (!doc.exists) return null;
+
+      return PuntajeEquipoFantasy.desdeMapa(doc.id, doc.data() ?? {});
+    } catch (e) {
+      _log.error("${TextosApp.LOG_PUNTAJE_FANTASY_ERROR_OBTENER} $e");
+      rethrow;
+    }
+  }
+
+  /*
+    Nombre: obtenerPuntajesPorParticipacion
+    Descripción:
+      Devuelve todos los puntajes fantasy registrados para una participación
+      de liga determinada, ordenados por timestamp de aplicación.
+    Entradas:
+      - idParticipacion (String): identificador de la participación en la liga.
+    Salidas:
+      - Future<List<PuntajeEquipoFantasy>>: lista de puntajes fantasy.
+  */
+  Future<List<PuntajeEquipoFantasy>> obtenerPuntajesPorParticipacion(
+    String idParticipacion,
+  ) async {
+    try {
+      idParticipacion = _sanitizarId(idParticipacion);
+      if (idParticipacion.isEmpty) {
+        throw ArgumentError(TextosApp.ERR_SERVICIO_ID_PARTICIPACION_INVALIDO);
+      }
+
+      _log.informacion(
+        "${TextosApp.LOG_PUNTAJE_FANTASY_LISTAR} $idParticipacion",
+      );
+
+      final query = await _db
+          .collection(ColFirebase.participaciones)
+          .doc(idParticipacion)
+          .collection(ColFirebase.puntajesFantasy)
+          .orderBy(CamposFirebase.timestampAplicacion)
+          .get();
+
+      return query.docs
+          .map((d) => PuntajeEquipoFantasy.desdeMapa(d.id, d.data()))
+          .toList();
+    } catch (e) {
+      _log.error("${TextosApp.LOG_PUNTAJE_FANTASY_ERROR_LISTAR} $e");
+      rethrow;
+    }
+  }
+}

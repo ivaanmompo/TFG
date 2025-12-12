@@ -1,0 +1,156 @@
+{
+  "liga": {
+    "nombre": "LaLiga EA Sports",
+    "temporada": "2024/2025",
+    "descripcion": "Primera división del fútbol español",
+    "totalFechasTemporada": 38
+  },
+
+  "equipos": [
+
+    {
+      "nombre": "FC Barcelona",
+      "descripcion": "Fútbol Club Barcelona",
+      "escudoUrl": "",
+      "jugadores": [
+        { "nombre": "Marc-André ter Stegen", "posicion": "POR", "nacionalidad": "Alemania", "dorsal": 1, "valorMercado": 87 },
+        { "nombre": "Iñaki Peña", "posicion": "POR", "nacionalidad": "España", "dorsal": 13, "valorMercado": 42 },
+
+        { "nombre": "Jules Koundé", "posicion": "DEF", "nacionalidad": "Francia", "dorsal": 23, "valorMercado": 71 },
+        { "nombre": "Ronald Araújo", "posicion": "DEF", "nacionalidad": "Uruguay", "dorsal": 4, "valorMercado": 78 },
+        { "nombre": "Pau Cubarsí", "posicion": "DEF", "nacionalidad": "España", "dorsal": 2, "valorMercado": 65 },
+        { "nombre": "Alejandro Balde", "posicion": "DEF", "nacionalidad": "España", "dorsal": 3, "valorMercado": 59 },
+        { "nombre": "Íñigo Martínez", "posicion": "DEF", "nacionalidad": "España", "dorsal": 5, "valorMercado": 44 },
+
+        { "nombre": "Pedri", "posicion": "MED", "nacionalidad": "España", "dorsal": 8, "valorMercado": 92 },
+        { "nombre": "Gavi", "posicion": "MED", "nacionalidad": "España", "dorsal": 6, "valorMercado": 89 },
+        { "nombre": "Frenkie de Jong", "posicion": "MED", "nacionalidad": "Países Bajos", "dorsal": 21, "valorMercado": 90 },
+        { "nombre": "Ilkay Gündogan", "posicion": "MED", "nacionalidad": "Alemania", "dorsal": 22, "valorMercado": 74 },
+        { "nombre": "Fermín López", "posicion": "MED", "nacionalidad": "España", "dorsal": 16, "valorMercado": 57 },
+
+        { "nombre": "Robert Lewandowski", "posicion": "DEL", "nacionalidad": "Polonia", "dorsal": 9, "valorMercado": 81 },
+        { "nombre": "Lamine Yamal", "posicion": "DEL", "nacionalidad": "España", "dorsal": 27, "valorMercado": 88 },
+        { "nombre": "Raphinha", "posicion": "DEL", "nacionalidad": "Brasil", "dorsal": 11, "valorMercado": 79 },
+        { "nombre": "Ferran Torres", "posicion": "DEL", "nacionalidad": "España", "dorsal": 7, "valorMercado": 70 },
+        { "nombre": "Vitor Roque", "posicion": "DEL", "nacionalidad": "Brasil", "dorsal": 19, "valorMercado": 60 },
+        { "nombre": "Marc Guiu", "posicion": "DEL", "nacionalidad": "España", "dorsal": 38, "valorMercado": 41 }
+      ]
+    },
+
+    {
+      "nombre": "Real Madrid",
+      "descripcion": "Real Madrid Club de Fútbol",
+      "escudoUrl": "",
+      "jugadores": [
+        { "nombre": "Thibaut Courtois", "posicion": "POR", "nacionalidad": "Bélgica", "dorsal": 1, "valorMercado": 83 },
+        { "nombre": "Andriy Lunin", "posicion": "POR", "nacionalidad": "Ucrania", "dorsal": 13, "valorMercado": 60 },
+
+        { "nombre": "Dani Carvajal", "posicion": "DEF", "nacionalidad": "España", "dorsal": 2, "valorMercado": 66 },
+        { "nombre": "Éder Militão", "posicion": "DEF", "nacionalidad": "Brasil", "dorsal": 3, "valorMercado": 72 },
+        { "nombre": "Antonio Rüdiger", "posicion": "DEF", "nacionalidad": "Alemania", "dorsal": 22, "valorMercado": 74 },
+        { "nombre": "David Alaba", "posicion": "DEF", "nacionalidad": "Austria", "dorsal": 4, "valorMercado": 68 },
+        { "nombre": "Ferland Mendy", "posicion": "DEF", "nacionalidad": "Francia", "dorsal": 23, "valorMercado": 55 },
+
+        { "nombre": "Jude Bellingham", "posicion": "MED", "nacionalidad": "Inglaterra", "dorsal": 5, "valorMercado": 97 },
+        { "nombre": "Federico Valverde", "posicion": "MED", "nacionalidad": "Uruguay", "dorsal": 15, "valorMercado": 89 },
+        { "nombre": "Toni Kroos", "posicion": "MED", "nacionalidad": "Alemania", "dorsal": 8, "valorMercado": 73 },
+        { "nombre": "Luka Modrić", "posicion": "MED", "nacionalidad": "Croacia", "dorsal": 10, "valorMercado": 61 },
+        { "nombre": "Eduardo Camavinga", "posicion": "MED", "nacionalidad": "Francia", "dorsal": 12, "valorMercado": 85 },
+
+        { "nombre": "Vinícius Jr.", "posicion": "DEL", "nacionalidad": "Brasil", "dorsal": 7, "valorMercado": 95 },
+        { "nombre": "Rodrygo Goes", "posicion": "DEL", "nacionalidad": "Brasil", "dorsal": 11, "valorMercado": 88 },
+        { "nombre": "Kylian Mbappé", "posicion": "DEL", "nacionalidad": "Francia", "dorsal": 9, "valorMercado": 100 },
+        { "nombre": "Arda Güler", "posicion": "DEL", "nacionalidad": "Turquía", "dorsal": 24, "valorMercado": 77 },
+        { "nombre": "Brahim Díaz", "posicion": "DEL", "nacionalidad": "España", "dorsal": 21, "valorMercado": 69 },
+        { "nombre": "Joselu", "posicion": "DEL", "nacionalidad": "España", "dorsal": 14, "valorMercado": 55 }
+      ]
+    },
+
+    {
+      "nombre": "Atlético de Madrid",
+      "descripcion": "Club Atlético de Madrid",
+      "escudoUrl": "",
+      "jugadores": [
+        { "nombre": "Jan Oblak", "posicion": "POR", "nacionalidad": "Eslovenia", "dorsal": 13, "valorMercado": 80 },
+        { "nombre": "Horatiu Moldovan", "posicion": "POR", "nacionalidad": "Rumanía", "dorsal": 1, "valorMercado": 40 },
+
+        { "nombre": "José María Giménez", "posicion": "DEF", "nacionalidad": "Uruguay", "dorsal": 2, "valorMercado": 70 },
+        { "nombre": "Stefan Savic", "posicion": "DEF", "nacionalidad": "Montenegro", "dorsal": 15, "valorMercado": 45 },
+        { "nombre": "Mario Hermoso", "posicion": "DEF", "nacionalidad": "España", "dorsal": 22, "valorMercado": 50 },
+        { "nombre": "César Azpilicueta", "posicion": "DEF", "nacionalidad": "España", "dorsal": 3, "valorMercado": 47 },
+        { "nombre": "Reinildo Mandava", "posicion": "DEF", "nacionalidad": "Mozambique", "dorsal": 23, "valorMercado": 43 },
+
+        { "nombre": "Koke", "posicion": "MED", "nacionalidad": "España", "dorsal": 6, "valorMercado": 58 },
+        { "nombre": "Rodrigo De Paul", "posicion": "MED", "nacionalidad": "Argentina", "dorsal": 5, "valorMercado": 60 },
+        { "nombre": "Marcos Llorente", "posicion": "MED", "nacionalidad": "España", "dorsal": 14, "valorMercado": 62 },
+        { "nombre": "Pablo Barrios", "posicion": "MED", "nacionalidad": "España", "dorsal": 24, "valorMercado": 52 },
+        { "nombre": "Saúl Ñíguez", "posicion": "MED", "nacionalidad": "España", "dorsal": 8, "valorMercado": 50 },
+
+        { "nombre": "Álvaro Morata", "posicion": "DEL", "nacionalidad": "España", "dorsal": 19, "valorMercado": 67 },
+        { "nombre": "Antoine Griezmann", "posicion": "DEL", "nacionalidad": "Francia", "dorsal": 7, "valorMercado": 92 },
+        { "nombre": "Memphis Depay", "posicion": "DEL", "nacionalidad": "Países Bajos", "dorsal": 9, "valorMercado": 64 },
+        { "nombre": "Samuel Lino", "posicion": "DEL", "nacionalidad": "Brasil", "dorsal": 12, "valorMercado": 55 },
+        { "nombre": "Ángel Correa", "posicion": "DEL", "nacionalidad": "Argentina", "dorsal": 10, "valorMercado": 57 },
+        { "nombre": "João Félix", "posicion": "DEL", "nacionalidad": "Portugal", "dorsal": 11, "valorMercado": 80 }
+      ]
+    },
+
+    {
+      "nombre": "Real Sociedad",
+      "descripcion": "Real Sociedad de Fútbol",
+      "escudoUrl": "",
+      "jugadores": [
+        { "nombre": "Álex Remiro", "posicion": "POR", "nacionalidad": "España", "dorsal": 1, "valorMercado": 70 },
+        { "nombre": "Unai Marrero", "posicion": "POR", "nacionalidad": "España", "dorsal": 32, "valorMercado": 35 },
+
+        { "nombre": "Igor Zubeldia", "posicion": "DEF", "nacionalidad": "España", "dorsal": 5, "valorMercado": 62 },
+        { "nombre": "Robin Le Normand", "posicion": "DEF", "nacionalidad": "España", "dorsal": 24, "valorMercado": 70 },
+        { "nombre": "Aihen Muñoz", "posicion": "DEF", "nacionalidad": "España", "dorsal": 3, "valorMercado": 48 },
+        { "nombre": "H. Traoré", "posicion": "DEF", "nacionalidad": "Mali", "dorsal": 18, "valorMercado": 46 },
+        { "nombre": "Jon Pacheco", "posicion": "DEF", "nacionalidad": "España", "dorsal": 20, "valorMercado": 40 },
+
+        { "nombre": "Mikel Merino", "posicion": "MED", "nacionalidad": "España", "dorsal": 8, "valorMercado": 75 },
+        { "nombre": "Brais Méndez", "posicion": "MED", "nacionalidad": "España", "dorsal": 23, "valorMercado": 65 },
+        { "nombre": "Beñat Turrientes", "posicion": "MED", "nacionalidad": "España", "dorsal": 22, "valorMercado": 50 },
+        { "nombre": "Ander Barrenetxea", "posicion": "MED", "nacionalidad": "España", "dorsal": 7, "valorMercado": 60 },
+        { "nombre": "Takefusa Kubo", "posicion": "MED", "nacionalidad": "Japón", "dorsal": 14, "valorMercado": 78 },
+
+        { "nombre": "Mikel Oyarzabal", "posicion": "DEL", "nacionalidad": "España", "dorsal": 10, "valorMercado": 72 },
+        { "nombre": "André Silva", "posicion": "DEL", "nacionalidad": "Portugal", "dorsal": 9, "valorMercado": 58 },
+        { "nombre": "Sheraldo Becker", "posicion": "DEL", "nacionalidad": "Surinam", "dorsal": 11, "valorMercado": 56 },
+        { "nombre": "Carlos Fernández", "posicion": "DEL", "nacionalidad": "España", "dorsal": 19, "valorMercado": 43 },
+        { "nombre": "Mohamed-Ali Cho", "posicion": "DEL", "nacionalidad": "Francia", "dorsal": 25, "valorMercado": 52 },
+        { "nombre": "Umar Sadiq", "posicion": "DEL", "nacionalidad": "Nigeria", "dorsal": 12, "valorMercado": 55 }
+      ]
+    },
+
+    {
+      "nombre": "Athletic Club",
+      "descripcion": "Athletic Club Bilbao",
+      "escudoUrl": "",
+      "jugadores": [
+        { "nombre": "Unai Simón", "posicion": "POR", "nacionalidad": "España", "dorsal": 1, "valorMercado": 72 },
+        { "nombre": "Julen Agirrezabala", "posicion": "POR", "nacionalidad": "España", "dorsal": 13, "valorMercado": 45 },
+
+        { "nombre": "Yeray Álvarez", "posicion": "DEF", "nacionalidad": "España", "dorsal": 5, "valorMercado": 60 },
+        { "nombre": "Iñigo Lekue", "posicion": "DEF", "nacionalidad": "España", "dorsal": 15, "valorMercado": 40 },
+        { "nombre": "Yuri Berchiche", "posicion": "DEF", "nacionalidad": "España", "dorsal": 17, "valorMercado": 52 },
+        { "nombre": "Aitor Paredes", "posicion": "DEF", "nacionalidad": "España", "dorsal": 3, "valorMercado": 48 },
+        { "nombre": "Dani Vivian", "posicion": "DEF", "nacionalidad": "España", "dorsal": 4, "valorMercado": 55 },
+
+        { "nombre": "Oihan Sancet", "posicion": "MED", "nacionalidad": "España", "dorsal": 8, "valorMercado": 70 },
+        { "nombre": "Mikel Vesga", "posicion": "MED", "nacionalidad": "España", "dorsal": 6, "valorMercado": 45 },
+        { "nombre": "Iñigo Ruiz de Galarreta", "posicion": "MED", "nacionalidad": "España", "dorsal": 16, "valorMercado": 44 },
+        { "nombre": "Oier Zarraga", "posicion": "MED", "nacionalidad": "España", "dorsal": 19, "valorMercado": 38 },
+        { "nombre": "Unai Gómez", "posicion": "MED", "nacionalidad": "España", "dorsal": 20, "valorMercado": 36 },
+
+        { "nombre": "Iñaki Williams", "posicion": "DEL", "nacionalidad": "Ghana", "dorsal": 9, "valorMercado": 76 },
+        { "nombre": "Nico Williams", "posicion": "DEL", "nacionalidad": "España", "dorsal": 11, "valorMercado": 80 },
+        { "nombre": "Gorka Guruzeta", "posicion": "DEL", "nacionalidad": "España", "dorsal": 12, "valorMercado": 54 },
+        { "nombre": "Asier Villalibre", "posicion": "DEL", "nacionalidad": "España", "dorsal": 22, "valorMercado": 40 },
+        { "nombre": "Álex Berenguer", "posicion": "DEL", "nacionalidad": "España", "dorsal": 7, "valorMercado": 50 },
+        { "nombre": "Iñigo Córdoba", "posicion": "DEL", "nacionalidad": "España", "dorsal": 21, "valorMercado": 37 }
+      ]
+    }
+  ]
+}

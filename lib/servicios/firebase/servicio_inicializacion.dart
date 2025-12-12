@@ -1,8 +1,20 @@
 /*
   Archivo: servicio_inicializacion.dart
   Descripción:
-    Inicializa Firebase leyendo configuración desde un archivo JSON.
-    Si el archivo indica usarEmulador=true, dirige SDKs al Firebase Emulator Suite.
+    Servicio encargado de inicializar Firebase a partir de un archivo de configuración
+    en formato JSON. Permite conectar con los emuladores locales de Firebase si así
+    se especifica en la configuración.
+
+  Dependencias:
+    - firebase_core
+    - cloud_firestore
+    - firebase_auth
+    - servicio_log.dart
+    - textos_app.dart
+
+  Archivos que dependen de este archivo:
+    - Punto de entrada de la aplicación
+    - Controladores o servicios que requieren acceso a Firebase inicializado
 */
 
 import 'dart:convert';
@@ -14,13 +26,13 @@ import 'package:fantasypro/servicios/utilidades/servicio_log.dart';
 import 'package:fantasypro/textos/textos_app.dart';
 
 class ServicioInicializacion {
+  /// Instancia de la aplicación Firebase inicializada.
   FirebaseApp? _app;
+
+  /// Servicio de logs para registrar información y errores durante la inicialización.
   final ServicioLog _log = ServicioLog();
 
-  // ---------------------------------------------------------------------------
-  // Constantes para claves del JSON
-  // ---------------------------------------------------------------------------
-
+  /// Constantes para claves del JSON
   static const String _kApiKey = "apiKey";
   static const String _kAppId = "appId";
   static const String _kSenderId = "messagingSenderId";
@@ -34,9 +46,19 @@ class ServicioInicializacion {
   static const String _kAuthPort = "emuladorAuthPuerto";
   static const String _kFirestorePort = "emuladorFirestorePuerto";
 
-  // ---------------------------------------------------------------------------
-  // Inicializar Firebase
-  // ---------------------------------------------------------------------------
+  /*
+    Nombre: inicializarDesdeArchivo
+    Descripción:
+      Inicializa Firebase utilizando los parámetros definidos en un archivo JSON
+      de configuración. Si se especifica el uso de emuladores, conecta Firebase Auth
+      y Firestore a las instancias locales.
+
+    Entradas:
+      - rutaConfig (String): ruta al archivo JSON de configuración.
+
+    Salidas:
+      - Future<FirebaseApp>: instancia inicializada de FirebaseApp.
+  */
   Future<FirebaseApp> inicializarDesdeArchivo(String rutaConfig) async {
     try {
       final String contenido = await rootBundle.loadString(rutaConfig);
@@ -57,9 +79,6 @@ class ServicioInicializacion {
 
       _log.informacion(TextosApp.LOG_INICIO_FIREBASE_OK);
 
-      // ---------------------------------------------------------------------
-      // Conexión a emuladores
-      // ---------------------------------------------------------------------
       final bool usarEmulador = cfg[_kUsarEmulador] == true;
 
       if (usarEmulador) {
@@ -69,9 +88,7 @@ class ServicioInicializacion {
 
         try {
           await FirebaseAuth.instance.useAuthEmulator(host, authPort);
-        } catch (_) {
-          // SDK Web a veces ignora esto, no representa error funcional
-        }
+        } catch (_) {}
 
         FirebaseFirestore.instance.settings = Settings(
           host: "$host:$firestorePort",
@@ -89,5 +106,6 @@ class ServicioInicializacion {
     }
   }
 
+  /// Devuelve la instancia actual de FirebaseApp inicializada, o null si no fue inicializada.
   FirebaseApp? get app => _app;
 }

@@ -1,0 +1,618 @@
+========================================
+catalogo_servicios.txt
+========================================
+
+CATÁLOGO DEL MÓDULO Servicios — mod0017
+Descripción:
+El módulo Servicios implementa el acceso a Firestore para lectura, escritura, edición y eliminación de datos persistentes del sistema fantasy. No incluye lógica de negocio ni validaciones, que son responsabilidad de los controladores. Todos los servicios aplican logs internos y utilizan transacciones o batch cuando corresponde.
+
+
+
+/// ---------------------------------------------------------------------------
+/// Archivo: servicio_autenticacion.dart
+/// ---------------------------------------------------------------------------
+/// Descripción:
+///   Servicio que gestiona el acceso y salida de usuarios mediante FirebaseAuth.
+/// Responsabilidades:
+///   - Registrar usuarios por correo y contraseña.
+///   - Autenticar usuarios existentes.
+///   - Cerrar sesión actual.
+///   - Obtener el usuario autenticado actual.
+/// Dependencias:
+///   - firebase_auth
+///   - servicio_log.dart
+
+/// ---------------------------------------------------------------------------
+/// Método: registrar
+/// Firma: Future<UserCredential> registrar(String correo, String clave)
+/// Descripción:
+///   Registra un nuevo usuario con correo y contraseña utilizando FirebaseAuth.
+/// Ejemplo:
+///   final cred = await servicio.registrar("mail@test.com", "clave123");
+
+/// ---------------------------------------------------------------------------
+/// Método: ingresar
+/// Firma: Future<UserCredential> ingresar(String correo, String clave)
+/// Descripción:
+///   Inicia sesión del usuario con los datos proporcionados.
+/// Ejemplo:
+///   final sesion = await servicio.ingresar("mail@test.com", "clave123");
+
+/// ---------------------------------------------------------------------------
+/// Método: cerrarSesion
+/// Firma: Future<void> cerrarSesion()
+/// Descripción:
+///   Cierra la sesión del usuario actual.
+/// Ejemplo:
+///   await servicio.cerrarSesion();
+
+/// ---------------------------------------------------------------------------
+/// Método: usuarioActual
+/// Firma: User? usuarioActual()
+/// Descripción:
+///   Devuelve el usuario autenticado actualmente, o null si no hay sesión activa.
+/// Ejemplo:
+///   final usuario = servicio.usuarioActual();
+
+
+
+/// ---------------------------------------------------------------------------
+/// Archivo: servicio_base_de_datos.dart
+/// ---------------------------------------------------------------------------
+/// Descripción:
+///   Provee herramientas utilitarias para conexión a Firestore,
+///   como generación de ID únicos y referencia global.
+/// Responsabilidades:
+///   - Obtener instancia de FirebaseFirestore.
+///   - Generar ID automático único.
+/// Dependencias:
+///   - cloud_firestore
+
+/// ---------------------------------------------------------------------------
+/// Método: obtener
+/// Firma: FirebaseFirestore obtener()
+/// Descripción:
+///   Devuelve una instancia única de FirebaseFirestore.
+/// Ejemplo:
+///   final db = ServicioBaseDeDatos().obtener();
+
+/// ---------------------------------------------------------------------------
+/// Método: generarId
+/// Firma: String generarId()
+/// Descripción:
+///   Genera un ID único como lo haría Firestore automáticamente.
+/// Ejemplo:
+///   final id = ServicioBaseDeDatos().generarId();
+
+
+
+/// ---------------------------------------------------------------------------
+/// Archivo: servicio_equipos_reales.dart
+/// ---------------------------------------------------------------------------
+/// Descripción:
+///   Gestiona equipos reales utilizados como referencia en el sistema.
+///   Permite CRUD completo sobre la colección "equipos_reales".
+/// Responsabilidades:
+///   - Crear, editar, archivar, activar y eliminar equipos reales.
+///   - Obtener equipos activos o todos los registrados.
+/// Dependencias:
+///   - cloud_firestore
+///   - modelos/equipo_real.dart
+///   - servicio_log.dart
+
+/// ---------------------------------------------------------------------------
+/// Método: crearEquipoReal
+/// Firma: Future<EquipoReal> crearEquipoReal(EquipoReal equipo)
+/// Descripción:
+///   Crea un nuevo equipo real en la base de datos.
+/// Ejemplo:
+///   final equipo = await servicio.crearEquipoReal(equipo);
+
+/// ---------------------------------------------------------------------------
+/// Método: obtenerTodos
+/// Firma: Future<List<EquipoReal>> obtenerTodos()
+/// Descripción:
+///   Devuelve todos los equipos reales, sin filtrar por estado.
+/// Ejemplo:
+///   final lista = await servicio.obtenerTodos();
+
+/// ---------------------------------------------------------------------------
+/// Método: obtenerActivos
+/// Firma: Future<List<EquipoReal>> obtenerActivos()
+/// Descripción:
+///   Lista los equipos reales que están activos.
+/// Ejemplo:
+///   final activos = await servicio.obtenerActivos();
+
+/// ---------------------------------------------------------------------------
+/// Método: editarEquipoReal
+/// Firma: Future<void> editarEquipoReal(EquipoReal equipo)
+/// Descripción:
+///   Edita los datos de un equipo real existente.
+/// Ejemplo:
+///   await servicio.editarEquipoReal(equipo);
+
+/// ---------------------------------------------------------------------------
+/// Método: archivarEquipoReal
+/// Firma: Future<void> archivarEquipoReal(String id)
+/// Descripción:
+///   Marca un equipo real como inactivo.
+/// Ejemplo:
+///   await servicio.archivarEquipoReal("ER001");
+
+/// ---------------------------------------------------------------------------
+/// Método: activarEquipoReal
+/// Firma: Future<void> activarEquipoReal(String id)
+/// Descripción:
+///   Activa un equipo real previamente archivado.
+/// Ejemplo:
+///   await servicio.activarEquipoReal("ER001");
+
+/// ---------------------------------------------------------------------------
+/// Método: eliminarEquipoReal
+/// Firma: Future<void> eliminarEquipoReal(String id)
+/// Descripción:
+///   Elimina un equipo real de la base.
+/// Ejemplo:
+///   await servicio.eliminarEquipoReal("ER001");
+
+
+
+/// ---------------------------------------------------------------------------
+/// Archivo: servicio_jugadores_reales.dart
+/// ---------------------------------------------------------------------------
+/// Descripción:
+///   Gestiona la colección "jugadores_reales", que representa los jugadores
+///   reales de fútbol sobre los cuales se calculan los puntajes.
+/// Responsabilidades:
+///   - CRUD completo sobre jugadores reales.
+///   - Filtrado por equipo real.
+/// Dependencias:
+///   - cloud_firestore
+///   - modelos/jugador_real.dart
+///   - servicio_log.dart
+
+/// ---------------------------------------------------------------------------
+/// Método: crearJugadorReal
+/// Firma: Future<JugadorReal> crearJugadorReal(JugadorReal jugador)
+/// Descripción:
+///   Agrega un nuevo jugador real a la base de datos.
+/// Ejemplo:
+///   final nuevo = await servicio.crearJugadorReal(jugador);
+
+/// ---------------------------------------------------------------------------
+/// Método: obtenerPorEquipoReal
+/// Firma: Future<List<JugadorReal>> obtenerPorEquipoReal(String idEquipoReal)
+/// Descripción:
+///   Lista los jugadores reales de un equipo específico.
+/// Ejemplo:
+///   final lista = await servicio.obtenerPorEquipoReal("ER002");
+
+/// ---------------------------------------------------------------------------
+/// Método: editarJugadorReal
+/// Firma: Future<void> editarJugadorReal(JugadorReal jugador)
+/// Descripción:
+///   Modifica los datos de un jugador real existente.
+/// Ejemplo:
+///   await servicio.editarJugadorReal(jugador);
+
+/// ---------------------------------------------------------------------------
+/// Método: archivarJugadorReal
+/// Firma: Future<void> archivarJugadorReal(String idJugador)
+/// Descripción:
+///   Marca un jugador real como inactivo en el sistema.
+/// Ejemplo:
+///   await servicio.archivarJugadorReal("JR123");
+
+/// ---------------------------------------------------------------------------
+/// Método: activarJugadorReal
+/// Firma: Future<void> activarJugadorReal(String idJugador)
+/// Descripción:
+///   Reactiva un jugador real previamente archivado.
+/// Ejemplo:
+///   await servicio.activarJugadorReal("JR123");
+
+/// ---------------------------------------------------------------------------
+/// Método: eliminarJugadorReal
+/// Firma: Future<void> eliminarJugadorReal(String idJugador)
+/// Descripción:
+///   Elimina permanentemente un jugador real.
+/// Ejemplo:
+///   await servicio.eliminarJugadorReal("JR123");
+
+
+
+/// ---------------------------------------------------------------------------
+/// Archivo: servicio_inicializacion.dart
+/// ---------------------------------------------------------------------------
+/// Descripción:
+///   Inicializa Firebase en la app a partir de un archivo de configuración
+///   local. Permite conectar a emuladores si está habilitado.
+/// Responsabilidades:
+///   - Cargar configuración desde archivo JSON.
+///   - Inicializar Firebase con las opciones correspondientes.
+///   - Activar conexión con emuladores si se especifica.
+/// Dependencias:
+///   - firebase_core
+///   - firebase_auth
+///   - cloud_firestore
+///   - servicio_log.dart
+///   - textos_app.dart
+
+/// ---------------------------------------------------------------------------
+/// Método: inicializarDesdeArchivo
+/// Firma: Future<FirebaseApp> inicializarDesdeArchivo(String rutaConfig)
+/// Descripción:
+///   Carga el archivo de configuración y crea una instancia de FirebaseApp.
+///   Si el JSON indica usar emuladores, los activa con los puertos configurados.
+/// Ejemplo:
+///   final app = await servicio.inicializarDesdeArchivo("assets/firebase_config.json");
+
+/// ---------------------------------------------------------------------------
+/// Método: app
+/// Firma: FirebaseApp? get app
+/// Descripción:
+///   Devuelve la instancia de FirebaseApp si ya fue inicializada.
+/// Ejemplo:
+///   final instancia = servicio.app;
+
+
+
+/// ---------------------------------------------------------------------------
+/// Archivo: servicio_puntajes_reales.dart
+/// ---------------------------------------------------------------------------
+/// Descripción:
+///   Servicio encargado de guardar y consultar los puntajes reales obtenidos
+///   por jugadores reales en una fecha determinada.
+/// Responsabilidades:
+///   - Guardar puntajes de una fecha usando batch.
+///   - Consultar puntajes por fecha o por jugador.
+/// Dependencias:
+///   - cloud_firestore
+///   - modelos/puntaje_jugador_fecha.dart
+///   - servicio_log.dart
+
+/// ---------------------------------------------------------------------------
+/// Método: guardarPuntajesDeFecha
+/// Firma: Future<void> guardarPuntajesDeFecha(String idLiga, String idFecha, List<PuntajeJugadorFecha> puntajes)
+/// Descripción:
+///   Guarda los puntajes de una fecha en documentos únicos por jugador.
+/// Ejemplo:
+///   await servicio.guardarPuntajesDeFecha("L1", "F1", listaDePuntajes);
+
+/// ---------------------------------------------------------------------------
+/// Método: obtenerPuntajesPorFecha
+/// Firma: Future<List<PuntajeJugadorFecha>> obtenerPuntajesPorFecha(String idFecha)
+/// Descripción:
+///   Devuelve todos los puntajes de una fecha determinada.
+/// Ejemplo:
+///   final puntajes = await servicio.obtenerPuntajesPorFecha("F1");
+
+/// ---------------------------------------------------------------------------
+/// Método: obtenerPuntajeDeJugadorEnFecha
+/// Firma: Future<PuntajeJugadorFecha?> obtenerPuntajeDeJugadorEnFecha(String idFecha, String idJugadorReal)
+/// Descripción:
+///   Busca el puntaje de un jugador real específico en una fecha dada.
+/// Ejemplo:
+///   final puntaje = await servicio.obtenerPuntajeDeJugadorEnFecha("F1", "JR1");
+
+
+
+/// ---------------------------------------------------------------------------
+/// Archivo: servicio_participaciones.dart
+/// ---------------------------------------------------------------------------
+/// Descripción:
+///   Servicio dedicado a la administración CRUD de la colección "participaciones_liga".
+///   Permite crear, obtener, editar, activar, archivar y eliminar participaciones
+///   de usuarios dentro de una liga.
+/// Responsabilidades:
+///   - Crear y registrar participaciones.
+///   - Validar si un usuario ya participa.
+///   - Obtener participaciones por usuario o liga.
+///   - Editar, archivar, activar o eliminar participaciones.
+/// Dependencias:
+///   - cloud_firestore
+///   - modelos/participacion_liga.dart
+///   - servicio_log.dart
+
+/// ---------------------------------------------------------------------------
+/// Método: crearParticipacion
+/// Firma: Future<ParticipacionLiga> crearParticipacion(ParticipacionLiga participacion)
+/// Descripción:
+///   Crea una nueva participación en la colección "participaciones_liga".
+///   Valida y sanitiza los datos antes de escribir en Firestore.
+
+/// ---------------------------------------------------------------------------
+/// Método: crearParticipacionEnLiga
+/// Firma: Future<ParticipacionLiga> crearParticipacionEnLiga(String idUsuario, String idLiga, String nombreEquipoFantasy)
+/// Descripción:
+///   Crea una participación a partir de ID de usuario, ID de liga y nombre del equipo.
+///   Aplica sanitización y validación previa de datos.
+
+/// ---------------------------------------------------------------------------
+/// Método: usuarioYaParticipa
+/// Firma: Future<bool> usuarioYaParticipa(String idUsuario, String idLiga)
+/// Descripción:
+///   Verifica si un usuario ya tiene una participación activa en la liga indicada.
+
+/// ---------------------------------------------------------------------------
+/// Método: obtenerParticipacion
+/// Firma: Future<ParticipacionLiga?> obtenerParticipacion(String idUsuario, String idLiga)
+/// Descripción:
+///   Recupera la participación de un usuario en una liga específica.
+///   Maneja unicidad y retorna null si no existe.
+
+/// ---------------------------------------------------------------------------
+/// Método: obtenerPorLiga
+/// Firma: Future<List<ParticipacionLiga>> obtenerPorLiga(String idLiga)
+/// Descripción:
+///   Retorna todas las participaciones activas dentro de una liga.
+
+/// ---------------------------------------------------------------------------
+/// Método: obtenerPorUsuario
+/// Firma: Future<List<ParticipacionLiga>> obtenerPorUsuario(String idUsuario)
+/// Descripción:
+///   Obtiene todas las participaciones registradas por un usuario.
+
+/// ---------------------------------------------------------------------------
+/// Método: editarParticipacion
+/// Firma: Future<void> editarParticipacion(ParticipacionLiga participacion)
+/// Descripción:
+///   Actualiza los datos de una participación existente.
+
+/// ---------------------------------------------------------------------------
+/// Método: archivarParticipacion
+/// Firma: Future<void> archivarParticipacion(String id)
+/// Descripción:
+///   Marca una participación como inactiva.
+
+/// ---------------------------------------------------------------------------
+/// Método: activarParticipacion
+/// Firma: Future<void> activarParticipacion(String id)
+/// Descripción:
+///   Marca una participación como activa nuevamente.
+
+/// ---------------------------------------------------------------------------
+/// Método: eliminarParticipacion
+/// Firma: Future<void> eliminarParticipacion(String id)
+/// Descripción:
+///   Elimina una participación definitivamente de Firestore.
+
+
+
+/// ---------------------------------------------------------------------------
+/// Archivo: servicio_equipos_fantasy.dart
+/// ---------------------------------------------------------------------------
+/// Descripción:
+///   Servicio encargado de administrar la colección "equipos_fantasy".
+///   Permite crear, consultar, editar, activar, archivar y eliminar
+///   equipos fantasy creados por usuarios dentro de una liga.
+/// Responsabilidades:
+///   - Crear equipos fantasy.
+///   - Obtener equipos por usuario y liga.
+///   - Actualizar o eliminar equipos.
+/// Dependencias:
+///   - cloud_firestore
+///   - modelos/equipo_fantasy.dart
+///   - servicio_log.dart
+
+/// ---------------------------------------------------------------------------
+/// Método: crearEquipoFantasy
+/// Firma: Future<EquipoFantasy> crearEquipoFantasy(String idUsuario, String idLiga, String nombre)
+/// Descripción:
+///   Crea un nuevo equipo fantasy con presupuesto por defecto.
+
+/// ---------------------------------------------------------------------------
+/// Método: crearEquipoFantasyParaUsuario
+/// Firma: Future<EquipoFantasy> crearEquipoFantasyParaUsuario(String idUsuario, String idLiga, String nombre, {int presupuestoInicial = 1000})
+/// Descripción:
+///   Crea un equipo fantasy personalizado con presupuesto inicial y plantel vacío.
+
+/// ---------------------------------------------------------------------------
+/// Método: obtenerEquipoFantasyDeUsuario
+/// Firma: Future<EquipoFantasy?> obtenerEquipoFantasyDeUsuario(String idUsuario, String idLiga)
+/// Descripción:
+///   Retorna el equipo fantasy único del usuario en una liga determinada.
+
+/// ---------------------------------------------------------------------------
+/// Método: obtenerPorUsuarioYLiga
+/// Firma: Future<List<EquipoFantasy>> obtenerPorUsuarioYLiga(String idUsuario, String idLiga)
+/// Descripción:
+///   Devuelve todos los equipos fantasy creados por un usuario en una liga.
+
+/// ---------------------------------------------------------------------------
+/// Método: editarEquipoFantasy
+/// Firma: Future<void> editarEquipoFantasy(EquipoFantasy equipo)
+/// Descripción:
+///   Actualiza los datos de un equipo fantasy.
+
+/// ---------------------------------------------------------------------------
+/// Método: archivarEquipoFantasy
+/// Firma: Future<void> archivarEquipoFantasy(String id)
+/// Descripción:
+///   Marca como inactivo un equipo fantasy.
+
+/// ---------------------------------------------------------------------------
+/// Método: activarEquipoFantasy
+/// Firma: Future<void> activarEquipoFantasy(String id)
+/// Descripción:
+///   Reactiva un equipo fantasy previamente archivado.
+
+/// ---------------------------------------------------------------------------
+/// Método: eliminarEquipoFantasy
+/// Firma: Future<void> eliminarEquipoFantasy(String id)
+/// Descripción:
+///   Elimina un equipo fantasy de forma definitiva.
+
+
+
+/// ---------------------------------------------------------------------------
+/// Archivo: servicio_alineaciones.dart
+/// ---------------------------------------------------------------------------
+/// Descripción:
+///   Servicio responsable de administrar las alineaciones fantasy creadas por el usuario.
+///   Permite registrar planteles, configurar titulares y suplentes, y gestionar alineaciones.
+/// Responsabilidades:
+///   - Crear y configurar alineaciones iniciales.
+///   - Editar y archivar alineaciones.
+///   - Validar y ordenar listas de jugadores.
+/// Dependencias:
+///   - cloud_firestore
+///   - modelos/alineacion.dart
+///   - servicio_log.dart
+
+/// ---------------------------------------------------------------------------
+/// Método: crearAlineacion
+/// Firma: Future<Alineacion> crearAlineacion(Alineacion alineacion)
+/// Descripción:
+///   Registra una nueva alineación con validación de listas y datos sanitizados.
+
+/// ---------------------------------------------------------------------------
+/// Método: guardarPlantelInicial
+/// Firma: Future<Alineacion> guardarPlantelInicial(String idEquipoFantasy, String idLiga, String idUsuario, List<String> idsJugadoresPlantel)
+/// Descripción:
+///   Registra el plantel inicial de un equipo fantasy previo a configurar titulares.
+
+/// ---------------------------------------------------------------------------
+/// Método: guardarAlineacionInicial
+/// Firma: Future<void> guardarAlineacionInicial(String idAlineacion, String formacion, List<String> idsTitulares, List<String> idsSuplentes)
+/// Descripción:
+///   Guarda la formación táctica, titulares y suplentes de una alineación.
+///   Valida duplicados y estructura.
+
+/// ---------------------------------------------------------------------------
+/// Método: obtenerPorUsuarioEnLiga
+/// Firma: Future<List<Alineacion>> obtenerPorUsuarioEnLiga(String idLiga, String idUsuario)
+/// Descripción:
+///   Recupera todas las alineaciones registradas por un usuario en una liga específica.
+
+/// ---------------------------------------------------------------------------
+/// Método: editarAlineacion
+/// Firma: Future<void> editarAlineacion(Alineacion alineacion)
+/// Descripción:
+///   Permite modificar los datos de una alineación ya existente.
+
+/// ---------------------------------------------------------------------------
+/// Método: archivarAlineacion
+/// Firma: Future<void> archivarAlineacion(String id)
+/// Descripción:
+///   Desactiva una alineación sin eliminarla.
+
+/// ---------------------------------------------------------------------------
+/// Método: activarAlineacion
+/// Firma: Future<void> activarAlineacion(String id)
+/// Descripción:
+///   Reactiva una alineación previamente archivada.
+
+/// ---------------------------------------------------------------------------
+/// Método: eliminarAlineacion
+/// Firma: Future<void> eliminarAlineacion(String id)
+/// Descripción:
+///   Elimina definitivamente una alineación de la base de datos.
+
+
+
+/// ---------------------------------------------------------------------------
+/// Archivo: servicio_fechas.dart
+/// ---------------------------------------------------------------------------
+/// Descripción:
+///   Servicio encargado de administrar las Fechas de una Liga dentro de Firestore.
+///   Permite crear nuevas fechas y cerrar fechas existentes.
+/// Responsabilidades:
+///   - Crear fechas numeradas y nombradas.
+///   - Listar fechas de una liga.
+///   - Cerrar fechas (sin eliminarlas).
+/// Dependencias:
+///   - cloud_firestore
+///   - modelos/fecha_liga.dart
+///   - servicio_log.dart
+
+/// ---------------------------------------------------------------------------
+/// Método: crearFecha
+/// Firma: Future<FechaLiga> crearFecha(FechaLiga fecha)
+/// Descripción:
+///   Crea una nueva fecha para una liga, asignando número correlativo y nombre generado.
+
+/// ---------------------------------------------------------------------------
+/// Método: obtenerPorLiga
+/// Firma: Future<List<FechaLiga>> obtenerPorLiga(String idLiga)
+/// Descripción:
+///   Lista todas las fechas registradas dentro de una liga específica.
+
+/// ---------------------------------------------------------------------------
+/// Método: cerrarFecha
+/// Firma: Future<void> cerrarFecha(String idFecha)
+/// Descripción:
+///   Marca una fecha como cerrada (activa=false, cerrada=true) sin eliminarla.
+
+
+
+/// ---------------------------------------------------------------------------
+/// Archivo: servicio_ligas.dart
+/// ---------------------------------------------------------------------------
+/// Descripción:
+///   Servicio que administra la colección "ligas" en Firestore.
+///   Permite crear, obtener, buscar, editar y archivar ligas.
+/// Responsabilidades:
+///   - Crear ligas.
+///   - Buscar por nombre.
+///   - Editar y archivar.
+/// Dependencias:
+///   - cloud_firestore
+///   - modelos/liga.dart
+///   - servicio_log.dart
+///   - textos_app.dart
+
+/// ---------------------------------------------------------------------------
+/// Método: crearLiga
+/// Firma: Future<Liga> crearLiga(Liga liga)
+/// Descripción:
+///   Crea una nueva liga en Firestore. Genera automáticamente el campo nombreBusqueda.
+
+/// ---------------------------------------------------------------------------
+/// Método: obtenerLiga
+/// Firma: Future<Liga?> obtenerLiga(String id)
+/// Descripción:
+///   Recupera una liga por su ID. Devuelve null si no existe.
+
+/// ---------------------------------------------------------------------------
+/// Método: obtenerLigasActivas
+/// Firma: Future<List<Liga>> obtenerLigasActivas()
+/// Descripción:
+///   Devuelve todas las ligas marcadas como activas.
+
+/// ---------------------------------------------------------------------------
+/// Método: buscarLigasPorNombre
+/// Firma: Future<List<Liga>> buscarLigasPorNombre(String texto)
+/// Descripción:
+///   Busca ligas por coincidencia parcial (campo normalizado nombreBusqueda).
+
+/// ---------------------------------------------------------------------------
+/// Método: obtenerTodasLasLigas
+/// Firma: Future<List<Liga>> obtenerTodasLasLigas()
+/// Descripción:
+///   Devuelve todas las ligas disponibles sin filtrar por estado.
+
+/// ---------------------------------------------------------------------------
+/// Método: editarLiga
+/// Firma: Future<void> editarLiga(Liga liga)
+/// Descripción:
+///   Actualiza los campos editables de una liga existente.
+
+/// ---------------------------------------------------------------------------
+/// Método: archivarLiga
+/// Firma: Future<void> archivarLiga(String id)
+/// Descripción:
+///   Marca una liga como inactiva sin eliminarla.
+
+/// ---------------------------------------------------------------------------
+/// Método: activarLiga
+/// Firma: Future<void> activarLiga(String id)
+/// Descripción:
+///   Reactiva una liga previamente archivada.
+
+/// ---------------------------------------------------------------------------
+/// Método: eliminarLiga
+/// Firma: Future<void> eliminarLiga(String id)
+/// Descripción:
+///   Elimina una liga de Firestore de forma permanente.

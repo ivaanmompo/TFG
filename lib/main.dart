@@ -8,21 +8,15 @@
 
 import 'package:fantasypro/controladores/controlador_router.dart';
 import 'package:flutter/material.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 
 // Servicios
 import 'servicios/utilidades/servicio_log.dart';
 import 'servicios/utilidades/servicio_detector_plataforma.dart';
-import 'servicios/utilidades/servicio_traducciones.dart';
+import 'textos/textos_app.dart';
 
 // Temas
 import 'temas/tema_web_desktop.dart';
 import 'temas/tema_web_mobile.dart';
-
-// Vistas
-import 'vistas/web/desktop/pagina_inicio_desktop.dart';
-import 'vistas/web/mobile/pagina_inicio_mobile.dart';
-import 'vistas/web/desktop/pagina_login_desktop.dart';
 
 // Firebase init
 import 'servicios/firebase/servicio_inicializacion.dart';
@@ -33,13 +27,13 @@ void main() async {
   final ServicioLog log = ServicioLog();
   final ServicioInicializacion init = ServicioInicializacion();
 
-  log.informacion("Iniciando carga de Firebase...");
+  log.informacion(TextosApp.LOG_APP_INICIANDO_FIREBASE);
 
   await init.inicializarDesdeArchivo(
-    'assets/configuracion/entorno/firebase_desarrollo.json',
+    'assets/configuracion/entorno/firebase_produccion.json',
   );
 
-  log.informacion("Firebase inicializado correctamente.");
+  log.informacion(TextosApp.LOG_INICIO_FIREBASE_OK);
 
   runApp(const AplicacionFantasyPro());
 }
@@ -54,26 +48,16 @@ class AplicacionFantasyPro extends StatefulWidget {
 class _AplicacionFantasyProEstado extends State<AplicacionFantasyPro> {
   final ServicioLog servicioLog = ServicioLog();
   final ServicioDetectorPlataforma detector = ServicioDetectorPlataforma();
-  final ServicioTraducciones servicioTraducciones = ServicioTraducciones();
 
   bool esDesktop = true;
-  Map<String, String> textos = {};
 
   Future<void> inicializarSistema(BuildContext context) async {
     final ancho = MediaQuery.of(context).size.width;
 
     esDesktop = detector.esEscritorio(ancho);
     servicioLog.informacion(
-      "Plataforma detectada: ${esDesktop ? "Desktop" : "Mobile"}",
+      "${TextosApp.LOG_APP_PLATAFORMA_DETECTADA} ${esDesktop ? "Desktop" : "Mobile"}",
     );
-
-    final String rutaTexto = esDesktop
-        ? "assets/configuracion/textos/web/desktop.txt"
-        : "assets/configuracion/textos/web/mobile.txt";
-
-    textos = await servicioTraducciones.cargarTextos(rutaTexto);
-
-    servicioLog.informacion("Textos cargados: ${textos.length} ítems");
   }
 
   @override
@@ -97,7 +81,6 @@ class _AplicacionFantasyProEstado extends State<AplicacionFantasyPro> {
                   ? obtenerTemaWebDesktop()
                   : obtenerTemaWebMobile(),
 
-              // FLUJO DE AUTENTICACIÓN
               home: ControladorRouter(),
             );
           },
